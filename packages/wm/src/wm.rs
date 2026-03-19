@@ -22,8 +22,9 @@ use crate::{
     },
     general::{
       cycle_focus, disable_binding_mode, enable_binding_mode,
-      platform_sync, reload_config, shell_exec,
+      platform_sync, reload_config, set_tray_icon_mode, shell_exec,
       sync_focused_window_border, toggle_pause,
+      toggle_tray_icon_mode,
     },
     monitor::focus_monitor,
     window::{
@@ -779,6 +780,14 @@ impl WindowManager {
         Ok(())
       }
       InvokeCommand::WmReloadConfig => reload_config(state, config),
+      InvokeCommand::WmSetTrayIconMode { mode } => {
+        set_tray_icon_mode(*mode, state);
+        Ok(())
+      }
+      InvokeCommand::WmToggleTrayIconMode => {
+        toggle_tray_icon_mode(state);
+        Ok(())
+      }
       InvokeCommand::WmTogglePause => {
         toggle_pause(
           state,
