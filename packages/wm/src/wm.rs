@@ -64,7 +64,12 @@ impl WindowManager {
     let (event_tx, event_rx) = mpsc::unbounded_channel();
     let (exit_tx, exit_rx) = mpsc::unbounded_channel();
 
-    let mut state = WmState::new(dispatcher, event_tx, exit_tx);
+    let mut state = WmState::new(
+      dispatcher,
+      event_tx,
+      exit_tx,
+      config.value.general.tray_icon_default_mode,
+    );
     state.populate(config)?;
 
     Ok(Self {

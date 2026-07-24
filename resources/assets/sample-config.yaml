@@ -41,10 +41,15 @@ general:
   show_all_in_taskbar: false
 
   # Whether the tray icon should reflect the current WM state.
-  # - 'true': Show the current tiling direction while active, and a
-  #   disabled status while paused.
+  # - 'true': Use the configured tray icon mode while active, and show a
+  #   disabled icon while paused.
   # - 'false': Always use the default static tray icon.
   tray_icon_state: false
+
+  # Display mode to use for the tray icon on startup and config reload.
+  # - 'status': Show the current tiling direction.
+  # - 'workspace': Show the current workspace number.
+  tray_icon_default_mode: 'status'
 
 gaps:
   # Whether to scale the gaps with the DPI of the monitor.
