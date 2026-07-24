@@ -98,6 +98,7 @@ impl WmState {
     dispatcher: Dispatcher,
     event_tx: mpsc::UnboundedSender<WmEvent>,
     exit_tx: mpsc::UnboundedSender<()>,
+    tray_icon_mode: TrayIconMode,
   ) -> Self {
     #[cfg(target_os = "windows")]
     let is_windows_11_or_greater = is_windows_11_or_greater()
@@ -132,7 +133,7 @@ impl WmState {
       binding_modes: Vec::new(),
       ignored_windows: Vec::new(),
       is_paused: false,
-      tray_icon_mode: TrayIconMode::default(),
+      tray_icon_mode,
       is_focus_synced: false,
       #[cfg(target_os = "windows")]
       is_windows_11_or_greater,
@@ -807,10 +808,25 @@ mod tests {
     let (event_tx, event_rx) = mpsc::unbounded_channel();
     let (exit_tx, _exit_rx) = mpsc::unbounded_channel();
 
-    let mut state = WmState::new(dispatcher, event_tx, exit_tx);
+    let mut state =
+      WmState::new(dispatcher, event_tx, exit_tx, TrayIconMode::Status);
     state.has_initialized = true;
 
     (event_loop, state, event_rx)
+  }
+
+  #[test]
+  fn new_uses_configured_tray_icon_mode() {
+    let (_event_loop, dispatcher) =
+      EventLoop::new().expect("Failed to create event loop.");
+    let (event_tx, mut event_rx) = mpsc::unbounded_channel();
+    let (exit_tx, _exit_rx) = mpsc::unbounded_channel();
+
+    let state =
+      WmState::new(dispatcher, event_tx, exit_tx, TrayIconMode::Workspace);
+
+    assert_eq!(state.tray_icon_mode, TrayIconMode::Workspace);
+    assert!(event_rx.try_recv().is_err());
   }
 
   #[test]
